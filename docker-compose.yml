@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  nginx:
+    hostname: nginx
+    container_name: nginx
+    build: docker/nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www/superproject.internal
+      - ./docker/log:/var/log/nginx
+    networks:
+      - internal
+
+  node:
+    hostname: node
+    container_name: node
+    build: docker/node
+    volumes:
+      - .:/var/www/superproject.internal
+      - ./docker/log:/var/log
+    ports:
+      - "3000:3000"
+  #  command: bash -c "yarn && yarn dev"
+    working_dir: /var/www/superproject.internal/www
+    networks:
+      - internal
+
+networks:
+  internal:
+    driver: bridge
